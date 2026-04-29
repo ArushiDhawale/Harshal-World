@@ -431,6 +431,161 @@ document.getElementById('quitBtn').onclick=()=>{stopGame();showMobileControls(''
 document.getElementById('playAgainBtn').onclick=()=>{document.getElementById('gameOverOverlay').classList.add('hidden');launchGame(currentGame)};
 document.getElementById('goHubBtn').onclick=()=>{stopGame();showMobileControls('');showScreen('hub-screen');loadHub()};
 
+// ===== GAME SPINNER =====
+const SPINNER_GAMES = [
+  { id: 'space', name: 'SPACE SHOOTER', emoji: '🚀', color: '#7C3AED' },
+  { id: 'flappy', name: 'FLAPPY BIRD', emoji: '🐦', color: '#22D3EE' },
+  { id: 'asteroid', name: 'ASTEROID DODGE', emoji: '☄️', color: '#A855F7' },
+  { id: 'whack', name: 'WHACK-A-MOLE', emoji: '🐻', color: '#10B981' },
+  { id: 'dino', name: 'DINO JUMP', emoji: '🦕', color: '#F59E0B' },
+  { id: 'zombie', name: 'ZOMBIE SHOOTER', emoji: '🧟', color: '#EF4444' }
+];
+
+let selectedSpinnerGame = null;
+let isSpinning = false;
+
+function openSpinner() {
+  document.getElementById('spinnerOverlay').classList.remove('hidden');
+  initSpinnerCanvas();
+  SFX.click();
+}
+
+function closeSpinner() {
+  document.getElementById('spinnerOverlay').classList.add('hidden');
+}
+
+function initSpinnerCanvas() {
+  const canvas = document.getElementById('spinnerCanvas');
+  const ctx = canvas.getContext('2d');
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const radius = 175;
+  const segments = SPINNER_GAMES.length;
+  const anglePerSegment = (2 * Math.PI) / segments;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  SPINNER_GAMES.forEach((game, i) => {
+    const startAngle = i * anglePerSegment - Math.PI / 2;
+    const endAngle = startAngle + anglePerSegment;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, radius, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fillStyle = game.color;
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(startAngle + anglePerSegment / 2);
+
+    // Draw emoji
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(game.emoji, radius - 12, 0);
+
+    ctx.restore();
+
+    // Draw game name radially
+    const midAngle = startAngle + anglePerSegment / 2;
+    const nameRadius = radius - 50;
+    const nameX = cx + Math.cos(midAngle) * nameRadius;
+    const nameY = cy + Math.sin(midAngle) * nameRadius;
+
+    ctx.save();
+    ctx.translate(nameX, nameY);
+    ctx.rotate(midAngle + Math.PI / 2);
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 4;
+    ctx.font = 'bold 11px Orbitron, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.strokeText(game.name, 0, 0);
+    ctx.fillText(game.name, 0, 0);
+    ctx.restore();
+  });
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 30, 0, 2 * Math.PI);
+  ctx.fillStyle = '#07070F';
+  ctx.fill();
+  ctx.strokeStyle = '#7C3AED';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 16px Orbitron, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('❓', cx, cy);
+}
+
+function spinWheel() {
+  if (isSpinning) return;
+  isSpinning = true;
+
+  const canvas = document.getElementById('spinnerCanvas');
+  const totalRotation = Math.PI * 2 * (5 + Math.random() * 3);
+  const targetAngle = totalRotation;
+
+  canvas.style.transition = 'none';
+  canvas.style.transform = 'rotate(0deg)';
+
+  requestAnimationFrame(() => {
+    canvas.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)';
+    canvas.style.transform = `rotate(${targetAngle}rad)`;
+  });
+
+  SFX.select();
+
+  setTimeout(() => {
+    const segments = SPINNER_GAMES.length;
+    const normalizedAngle = (targetAngle % (2 * Math.PI));
+    const pointerAngle = (2 * Math.PI - normalizedAngle + Math.PI / 2) % (2 * Math.PI);
+    const selectedIndex = Math.floor(pointerAngle / (2 * Math.PI / segments));
+    selectedSpinnerGame = SPINNER_GAMES[selectedIndex];
+
+    isSpinning = false;
+    showSpinnerResult();
+  }, 4200);
+}
+
+function showSpinnerResult() {
+  const overlay = document.getElementById('spinnerResultOverlay');
+  document.getElementById('spinnerResultEmoji').textContent = selectedSpinnerGame.emoji;
+  document.getElementById('spinnerResultTitle').textContent = selectedSpinnerGame.name;
+  document.getElementById('spinnerResultDesc').textContent = 'Feeling lucky? Let\'s go!';
+
+  document.getElementById('spinnerOverlay').classList.add('hidden');
+  overlay.classList.remove('hidden');
+
+  spawnConfetti();
+  SFX.levelUp();
+}
+
+function hideSpinnerResult() {
+  document.getElementById('spinnerResultOverlay').classList.add('hidden');
+  selectedSpinnerGame = null;
+}
+
+document.getElementById('openSpinner').onclick = openSpinner;
+document.getElementById('closeSpinner').onclick = closeSpinner;
+document.getElementById('spinBtn').onclick = spinWheel;
+
+document.getElementById('playSelectedGame').onclick = () => {
+  if (selectedSpinnerGame) {
+    hideSpinnerResult();
+    launchGame(selectedSpinnerGame.id);
+  }
+};
+
+document.getElementById('spinAgainBtn').onclick = () => {
+  hideSpinnerResult();
+  openSpinner();
+};
+
 let currentGame='',gamePaused=false,gameRunning=false,gameLoop=null;
 const gameCanvasWrap=document.getElementById('gameCanvasWrap');
 const gameCanvas=document.getElementById('gameCanvas');

@@ -294,6 +294,31 @@ body.light-theme .game-overlay{background:rgba(15,23,42,0.55)}
 .float-popup{position:absolute;font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:700;color:var(--yellow);pointer-events:none;animation:floatUp .9s ease forwards;z-index:20;text-shadow:0 0 10px rgba(245,158,11,0.8)}
 @keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(1.3)}}
 
+.spinner-section{display:flex;justify-content:center;margin:2rem 0}
+.spinner-trigger{background:linear-gradient(135deg,var(--pink),var(--purple));font-size:1rem;padding:.9rem 2.5rem}
+.spinner-trigger:hover{transform:translateY(-2px);box-shadow:0 0 25px rgba(236,72,153,0.6)}
+.spinner-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.spinner-overlay.hidden{display:none}
+.spinner-container{position:relative;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+.spinner-close{position:absolute;top:-3rem;right:0;font-size:1.5rem;color:var(--text2);cursor:pointer;background:none;border:none;transition:color .2s}
+.spinner-close:hover{color:var(--red)}
+.spinner-wheel-wrap{position:relative}
+.spinner-pointer{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:2rem;color:var(--yellow);filter:drop-shadow(0 0 10px rgba(245,158,11,0.8));z-index:10;text-shadow:0 2px 4px rgba(0,0,0,0.5)}
+#spinnerCanvas{border-radius:50%;box-shadow:0 0 40px rgba(124,58,237,0.5),0 0 80px rgba(124,58,237,0.2);transition:transform 4s cubic-bezier(0.2, 0.8, 0.3, 1)}
+.spin-btn{margin-top:.5rem;font-size:1.2rem;padding:1rem 3rem;animation:pulseGlow 2s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 20px rgba(124,58,237,0.4)}50%{box-shadow:0 0 40px rgba(124,58,237,0.8)}}
+.spinner-result-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:201;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px)}
+.spinner-result-overlay.hidden{display:none}
+.spinner-result-card{background:var(--bg3);border:2px solid var(--border);border-radius:28px;padding:2.5rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
+.spinner-result-emoji{font-size:4rem;animation:bounce .6s ease}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.spinner-result-title{font-family:'Orbitron',sans-serif;font-size:1.8rem;font-weight:900;color:var(--neon2);text-shadow:0 0 20px rgba(168,85,247,0.6)}
+.spinner-result-desc{font-size:.95rem;color:var(--text2)}
+.spinner-result-btns{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;justify-content:center}
+.spinner-result-btns .btn-secondary{background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--text2)}
+.spinner-result-btns .btn-secondary:hover{border-color:var(--purple2);color:var(--text)}
+
 /* Confetti */
 .confetti-piece{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:500;animation:confettiFall linear forwards}
 @keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
