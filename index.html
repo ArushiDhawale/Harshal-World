@@ -114,7 +114,6 @@
         <span class="search-icon">🔍</span>
         <input type="text" id="gameSearch" placeholder="Search games (Press '/' to focus)..." autocomplete="off">
       </div>
-      
       <div class="filter-pills" id="filterPills">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="arcade">🕹️ Arcade</button>
@@ -179,6 +178,12 @@
           <div class="game-best">BEST: <span class="best-score" data-game="zombie">0</span></div>
         </div>
       </div>
+    </div>
+
+    <div class="spinner-section">
+      <button class="btn spinner-trigger" id="openSpinner">
+        <span>🎰</span> SPIN TO PLAY
+      </button>
     </div>
 
     <!-- Bottom row -->
@@ -400,6 +405,31 @@
     <div class="settings-row">
       <span class="settings-label">Reset All Scores</span>
       <button class="btn-danger" id="resetScores">RESET</button>
+    </div>
+  </div>
+</div>
+
+<!-- SPINNER OVERLAY -->
+<div class="spinner-overlay hidden" id="spinnerOverlay">
+  <div class="spinner-container">
+    <button class="close-btn spinner-close" id="closeSpinner">✕</button>
+    <div class="spinner-wheel-wrap">
+      <canvas id="spinnerCanvas" width="380" height="380"></canvas>
+      <div class="spinner-pointer">▼</div>
+    </div>
+    <button class="btn spin-btn" id="spinBtn">🎲 SPIN</button>
+  </div>
+</div>
+
+<!-- SPINNER RESULT MODAL -->
+<div class="spinner-result-overlay hidden" id="spinnerResultOverlay">
+  <div class="spinner-result-card">
+    <div class="spinner-result-emoji" id="spinnerResultEmoji">🎮</div>
+    <div class="spinner-result-title" id="spinnerResultTitle">SPACE SHOOTER</div>
+    <div class="spinner-result-desc" id="spinnerResultDesc">Ready to play?</div>
+    <div class="spinner-result-btns">
+      <button class="btn" id="playSelectedGame">▶ PLAY NOW</button>
+      <button class="btn btn-secondary" id="spinAgainBtn">🎰 SPIN AGAIN</button>
     </div>
   </div>
 </div>
